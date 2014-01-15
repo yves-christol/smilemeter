@@ -1,0 +1,6 @@
+/* CSS declarations go here */
+#headerImage img {
+    margin-bottom: 50px;
+    max-width: 100%;
+    height: auto;
+}

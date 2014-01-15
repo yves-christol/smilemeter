@@ -1,0 +1,123 @@
+<head>
+  <title>smile meter</title>
+  <link rel="stylesheet" href="base.css">
+  <link rel="stylesheet" href="skeleton.css">
+  <link rel="stylesheet" href="layout.css">
+</head>
+
+<body>
+<div class="container">
+  <div class="four columns">
+    <img src="smilemeter.png" align="up">
+  </div>
+  <div id="nav" class="four columns">
+    <h2>Smilemeter</h2>
+    <p> Real time feedback on our topics.</p> 
+    <small><a href="https://github.com/yves-christol/smilemeter">Fork it on github</a></small> 
+  </div>
+  <div class="height columns">
+    {{loginButtons}} 
+    {{> entryfield}}
+  </div>
+  <div id="nav" class="sixteen columns">
+    <hr>
+    {{> topics}}
+    <hr>
+    {{> users}}
+    <img src="minisoft.png" align="right"/>    
+  </div>
+     
+</div><!-- container -->
+</body>
+
+
+<template name="entryfield">
+  {{#if currentUser}}
+    {{#if isVerified}}
+      <h4>Create a new topic</h4>
+      <input type="text" id="link" placeholder="Copy/paste the link to your topic presentation if any" /> 
+      <input type="text" id="title" placeholder="Then type your topic title here, and press enter" />
+    {{ else }}
+      <p> Check your mail account, only verified users can play </p>
+    {{/if}}
+  {{ else }}
+    <p> Log in first ! </p>
+  {{/if}}
+</template>
+
+<template name="topics">
+  {{#if currentUser}}
+  {{#if isVerified}}
+  {{#each topics}}
+    <p>
+    {{#if isNew time}}<img src="new.png" align="right"/>{{/if}}
+	  <topictitle>{{title}}   </topictitle>
+    <votes>{{smiles _id}} </votes>
+	  {{#if isOwner owner}}
+	    <img src="edit.png" name="editTopic"/>
+	  {{/if}}
+    {{#if linked _id}}
+      <a href="{{link}}">{{link}}</a>
+    {{ else }}
+      (no link)
+    {{/if}}
+    {{#if isOwner owner}}
+      <img src="edit.png" name="editLink"/>
+    {{/if}}
+    <small> from {{name owner}} - {{prettifyDate time}}</small>
+    {{> votes}}
+    {{#if isOwner owner}}
+      <small>Delete your topic: <img src="delete.png" name="delete"/>
+      </small>
+    {{ else }}
+      {{#if voted _id}}
+        <small>Reset your vote: <img src="delete.png" name="delete"/>
+        </small>
+      {{/if}}
+    {{/if}}
+	  </p>
+  {{/each}}
+  {{/if}}
+  {{/if}}
+</template>
+
+<template name="votes">
+  {{#if currentUser}}
+    {{#if voted _id}}
+      <br>
+      {{#each votes}}
+        {{comment}}
+         | 
+      {{/each}}
+      <br>
+    {{ else }}
+      <votes>
+      <div class="smile-radio>">
+      <label>:-|
+      <input type="radio" name="smile-{{_id}}" value="0" checked="checked">
+      </label>
+      <label>:-)
+      <input type="radio" name="smile-{{_id}}" value="1">
+      </label>
+      <label>:-D
+      <input type="radio" name="smile-{{_id}}" value="2">
+      </label>
+      <input type="text" id="comment" placeholder="type your comment here, and press enter" />
+      </div>
+      </votes>
+    {{/if}}
+  {{/if}} 
+</template>
+
+<template name="users">
+  {{#if currentUser}}
+  {{#if is Verified}}
+    <small>
+    {{#each users}}
+      {{name _id}} -  
+    {{/each}}
+    unsubscribe <img src="delete.png" name="unsubscribe"/>
+    </small>
+  {{/if}}
+  {{/if}}
+</template>
