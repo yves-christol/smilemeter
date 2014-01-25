@@ -48,6 +48,13 @@ if (Meteor.isClient) {
     return new Date(timestamp).toDateString('dd-MM-yy')
   });
 
+  Handlebars.registerHelper("prettifyLink", function(link) {
+    if (link && link.length > 30) {
+      link = link.slice(0,27)+"...";
+    }
+    return link;
+  });
+
   Handlebars.registerHelper("name", function(owner) {
     // return the mail address of the owner
     var name = "unknown";
