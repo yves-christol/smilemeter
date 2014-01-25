@@ -155,7 +155,7 @@ if (Meteor.isClient) {
 
   // Click on a topic related icon (edit or delete), owner only
   Template.topics.events({
-    'click' : function (event) {
+    'click img, tap img' : function (event) {
       if (this) {
         if (event.currentTarget.name === "delete") {
           if (this.owner === Meteor.userId()){
@@ -188,7 +188,7 @@ if (Meteor.isClient) {
 
   // Click on unsubscribe to delete your user account
   Template.users.events({
-    'click' : function (event) {
+    'click img, tap img' : function (event) {
       if (event.currentTarget.name === "unsubscribe" &&
               Meteor.userId() &&
               confirm("Are you sure you want to unsubscribe ? This will delete permanently all your topics.")) {
