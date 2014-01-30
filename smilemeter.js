@@ -80,18 +80,21 @@ if (Meteor.isClient) {
 
   Handlebars.registerHelper("smiles", function(_id) {
     // return the smile string
-    var smiles = ":-)";
     var topic = Topics.findOne({_id: _id});
-    if (topic) {
+    if (topic && topic.votes && topic.votes.length > 0) {
+      var smiles = 0;
       for (var i = 0; i < topic.votes.length; i++) {
-        if (topic.votes[i].value == 1) {
-          smiles += ")";
-        } else if (topic.votes[i].value == 2) {
-          smiles += "))";
+        if (typeof topic.votes[i].value === "number") {
+          smiles += topic.votes[i].value;
         }
       }
+      smiles *= 3.3334;
+      smiles /= i;
+      smiles = Math.round(smiles*10)/10;
+      return smiles+" /10";
+    } else {
+      return "no vote yet";
     }
-    return smiles;
   });
 
   Handlebars.registerHelper("voted", function(_id) {
@@ -136,8 +139,8 @@ if (Meteor.isClient) {
     
   // Create a new topic
   Template.entryfield.events = {
-    'keydown #title': function(event) {
-      if(event.which == 13) {
+    'keydown #title, click img, tap img': function(event) {
+      if(event.which == 13 || event.currentTarget.name === "create") {
         // Submit the form
         var title = document.getElementById('title');
         var link = document.getElementById('link');
@@ -211,17 +214,17 @@ if (Meteor.isClient) {
 
   // Enter a vote for a given topic
   Template.votes.events({
-    'keydown #comment': function(event) {
-      if(event.which == 13) {
+    'click img, tap img': function(event) {
+      if(event.currentTarget.name === 'vote-'+this._id) {
         // Submit the vote
         var vote = new Object();
         vote.owner = Meteor.userId();
-        vote.comment = document.getElementById('comment').value;
+        vote.comment = document.getElementById('comment-'+this._id).value;
         if (vote.comment == "") {
           vote.comment = "...";
         }
         var smile = document.getElementsByName('smile-'+this._id);
-        for (var i = 0; i < 3; i++) {
+        for (var i = 0; i < 4; i++) {
           if (smile.item(i).checked) {
             vote.value = i;
           }
